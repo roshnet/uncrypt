@@ -79,7 +79,7 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    frame: false,
+    autoHideMenuBar: true,
   })
 
   mainWindow.loadURL(resolveHtmlPath('index.html'))
