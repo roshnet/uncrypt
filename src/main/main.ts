@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import 'core-js/stable'
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
@@ -117,6 +117,19 @@ const createWindow = async () => {
 /**
  * Add event listeners...
  */
+
+// Read files for the renderer
+ipcMain.handle('OPEN_FILE_SELECT', async () => {
+  const { filePaths } = await dialog.showOpenDialog(
+    { properties: ['openFile', 'multiSelections'] },
+    {
+      message: 'Select files to encrypt',
+      title: 'Pick files',
+      buttonLabel: 'Select',
+    },
+  )
+  return filePaths
+})
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

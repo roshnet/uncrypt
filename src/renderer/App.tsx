@@ -9,17 +9,15 @@ import { ThemeProvider } from '@strapi/design-system/ThemeProvider'
 import { lightTheme } from '@strapi/design-system/themes'
 import { BulletList, Key, Lock, Search } from '@strapi/icons'
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom'
+import './App.css'
 import AppHeader from './components/AppHeader'
-
-const Home = () => {
-  return <h1>Welcome to uCrypt</h1>
-}
+import EncryptScreen from './pages/Encrypt'
 
 const DrawerNav = () => (
   <MainNav condensed={false}>
     <NavSections>
       <NavSection label="Actions">
-        <NavLink to="/encrypt" icon={<Lock />}>
+        <NavLink to="/" icon={<Lock />}>
           Encrypt
         </NavLink>
         <NavLink to="/decrypt" icon={<Key />}>
@@ -52,7 +50,7 @@ export default function App() {
         <Layout sideNav={<DrawerNav />}>
           <ContentLayout>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<EncryptScreen />} />
             </Routes>
           </ContentLayout>
         </Layout>
