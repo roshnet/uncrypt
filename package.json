@@ -23,7 +23,7 @@
       "prettier --ignore-path .eslintignore --parser json --write"
     ],
     "*.{css,scss}": [
-      "prettier --ignore-path .eslintignore --single-quote --write"
+      "prettier --ignore-path .eslintignore --parser css --write"
     ],
     "*.{html,md,yml}": [
       "prettier --ignore-path .eslintignore --single-quote --write"
