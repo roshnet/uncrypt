@@ -108,8 +108,12 @@ export default function EncryptScreen() {
   )
 
   return (
-    <Flex justifyContent="center" alignItems="center">
-      <Box padding={10}>
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      style={{ height: '80vh' }}
+    >
+      <Box padding={5}>
         <Box padding={4} className="u-center">
           <Button
             onClick={selectFiles}

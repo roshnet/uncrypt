@@ -14,7 +14,7 @@ import AppHeader from './components/AppHeader'
 import EncryptScreen from './pages/Encrypt'
 
 const DrawerNav = () => (
-  <MainNav condensed={false}>
+  <MainNav condensed={false} style={{ height: '85vh' }}>
     <NavSections>
       <NavSection label="Actions">
         <NavLink to="/" icon={<Lock />}>
