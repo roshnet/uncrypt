@@ -11,7 +11,8 @@ type Props = {
 export default function FileListItem({ title, tooltip }: Props) {
   const listItem = (
     <Typography variant="h2" textColor="secondary600">
-      <File /> {title}
+      <File /> {title.slice(0, 20)}
+      {title.length > 20 && '...'}
     </Typography>
   )
 
