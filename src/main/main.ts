@@ -15,7 +15,7 @@ import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import 'regenerator-runtime/runtime'
 import MenuBuilder from './menu'
-import { resolveHtmlPath } from './util'
+import { resolveHtmlPath } from './utils'
 
 export default class AppUpdater {
   constructor() {
