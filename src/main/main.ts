@@ -11,11 +11,12 @@
 import 'core-js/stable'
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import log from 'electron-log'
+import Store from 'electron-store'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import 'regenerator-runtime/runtime'
 import MenuBuilder from './menu'
-import { resolveHtmlPath } from './utils'
+import { decryptFile, encryptFile, resolveHtmlPath } from './utils'
 
 export default class AppUpdater {
   constructor() {
@@ -26,6 +27,8 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null
+
+const store = new Store()
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`
@@ -129,6 +132,39 @@ ipcMain.handle('OPEN_FILE_SELECT', async () => {
     },
   )
   return filePaths
+})
+
+// Read values in electron-store via renderer
+ipcMain.handle('GET_STORE', (e, key) => {
+  return store.get(key, '')
+})
+
+// Save values to electron-store via renderer
+ipcMain.handle('SET_STORE', (e, key: string, value: unknown) => {
+  store.set(key, value)
+})
+
+// Handle encryption of the specified file
+ipcMain.handle(
+  'ENCRYPT',
+  async (e: Electron.IpcMainInvokeEvent, filePath: string) => {
+    try {
+      await encryptFile(filePath)
+      return true
+    } catch (err) {
+      return false
+    }
+  },
+)
+
+// Attempt decryption of the specified file
+ipcMain.handle('DECRYPT', async (filePath: string) => {
+  try {
+    await decryptFile(filePath)
+    return true
+  } catch {
+    return false
+  }
 })
 
 app.on('window-all-closed', () => {

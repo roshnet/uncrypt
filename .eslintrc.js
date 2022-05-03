@@ -8,6 +8,8 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-no-bind': 'off',
     'prettier/prettier': 0,
+    'no-await-in-loop': 'off',
+    'no-restricted-syntax': 'off', // allows using `for (let i of arr) {}`
   },
   parserOptions: {
     ecmaVersion: 2020,

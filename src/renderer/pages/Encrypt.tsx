@@ -5,12 +5,14 @@ import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog'
 import { Divider } from '@strapi/design-system/Divider'
 import { Flex } from '@strapi/design-system/Flex'
 import { GridLayout } from '@strapi/design-system/Layout'
+import { Loader } from '@strapi/design-system/Loader'
 import { Stack } from '@strapi/design-system/Stack'
 import { Typography } from '@strapi/design-system/Typography'
 import { ExclamationMarkCircle, Lock, Plus } from '@strapi/icons'
 import { ipcRenderer } from 'electron'
 import path from 'path'
 import { useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import FileListItem from '../components/FileListItem'
 
 export default function EncryptScreen() {
@@ -18,19 +20,42 @@ export default function EncryptScreen() {
   const [checked, setChecked] = useState<boolean>(true)
   const [alertDialogShown, setAlertDialogShown] = useState<boolean>(false)
   const [continueDangerously, setContinueDangerously] = useState<boolean>(false)
+  const [inProgress, setInProgress] = useState<boolean>(false)
+  const results: boolean[] = []
 
   async function selectFiles() {
     const filePaths = await ipcRenderer.invoke('OPEN_FILE_SELECT')
     setFiles(filePaths)
   }
 
+  const resetLocalState = () => {
+    setChecked(true)
+    setFiles([])
+    setInProgress(false)
+    results.length = 0
+  }
+
   async function beginEncryption() {
     if (!checked && !continueDangerously) {
       setAlertDialogShown(true)
-      // eslint-disable-next-line no-useless-return
       return
     }
-    // TODO: Continue with encryption based on value of `checked`
+    setInProgress(true)
+    for (const fp of files) {
+      const res = (await ipcRenderer.invoke('ENCRYPT', fp)) as boolean
+      results.push(res)
+    }
+    setInProgress(false)
+    if (results.filter((v) => !!v).length < files.length) {
+      toast.error('Some files not encrypted', {
+        duration: 4000,
+      })
+    } else
+      toast.success(
+        'Done! Locked files are saved next to their original files with a ".ucrypt" extension.\n\nTo unlock, use the decryption tab.',
+        { duration: 6000 },
+      )
+    resetLocalState()
   }
 
   const finalizeSettings = () => {
@@ -97,6 +122,7 @@ export default function EncryptScreen() {
         <Button
           onClick={beginEncryption}
           startIcon={<Lock />}
+          disabled={inProgress}
           size="L"
           variant={checked ? 'primary' : 'danger-light'}
           fullWidth
@@ -104,6 +130,12 @@ export default function EncryptScreen() {
           ENCRYPT
         </Button>
       </Box>
+
+      {inProgress && (
+        <Box padding={5} className="u-center">
+          <Loader>Loading content...</Loader>
+        </Box>
+      )}
     </Box>
   )
 
@@ -113,6 +145,7 @@ export default function EncryptScreen() {
       alignItems="center"
       style={{ height: '80vh' }}
     >
+      <Toaster position="bottom-center" />
       <Box padding={5}>
         <Box padding={4} className="u-center">
           <Button
