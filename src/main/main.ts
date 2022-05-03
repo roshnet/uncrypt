@@ -151,21 +151,24 @@ ipcMain.handle(
     try {
       await encryptFile(filePath)
       return true
-    } catch (err) {
+    } catch {
       return false
     }
   },
 )
 
 // Attempt decryption of the specified file
-ipcMain.handle('DECRYPT', async (filePath: string) => {
-  try {
-    await decryptFile(filePath)
-    return true
-  } catch {
-    return false
-  }
-})
+ipcMain.handle(
+  'DECRYPT',
+  async (e: Electron.IpcMainInvokeEvent, filePath: string) => {
+    try {
+      await decryptFile(filePath)
+      return true
+    } catch {
+      return false
+    }
+  },
+)
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

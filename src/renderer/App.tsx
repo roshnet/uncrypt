@@ -11,6 +11,7 @@ import { BulletList, Key, Lock, Search } from '@strapi/icons'
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.css'
 import AppHeader from './components/AppHeader'
+import DecryptScreen from './pages/Decrypt'
 import EncryptScreen from './pages/Encrypt'
 
 const DrawerNav = () => (
@@ -51,6 +52,7 @@ export default function App() {
           <ContentLayout>
             <Routes>
               <Route path="/" element={<EncryptScreen />} />
+              <Route path="/decrypt" element={<DecryptScreen />} />
             </Routes>
           </ContentLayout>
         </Layout>
