@@ -15,6 +15,7 @@ import Store from 'electron-store'
 import { autoUpdater } from 'electron-updater'
 import path from 'path'
 import 'regenerator-runtime/runtime'
+import db from './db'
 import MenuBuilder from './menu'
 import { decryptFile, encryptFile, resolveHtmlPath } from './utils'
 
@@ -150,6 +151,10 @@ ipcMain.handle(
   async (e: Electron.IpcMainInvokeEvent, filePath: string) => {
     try {
       await encryptFile(filePath)
+      await db.files.insert({
+        path: filePath,
+        op: 'enc',
+      })
       return true
     } catch {
       return false
@@ -163,12 +168,22 @@ ipcMain.handle(
   async (e: Electron.IpcMainInvokeEvent, filePath: string) => {
     try {
       await decryptFile(filePath)
+      await db.files.insert({
+        path: filePath,
+        op: 'dec',
+      })
       return true
     } catch {
       return false
     }
   },
 )
+
+// Return a list of all files in the database
+ipcMain.handle('GET_ALL_FILES', async () => {
+  const allFiles = await db.files.find({})
+  return allFiles
+})
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
