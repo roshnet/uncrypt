@@ -10,6 +10,8 @@ module.exports = {
     'prettier/prettier': 0,
     'no-await-in-loop': 'off',
     'no-restricted-syntax': 'off', // allows using `for (let i of arr) {}`
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'func-names': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

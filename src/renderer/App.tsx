@@ -13,6 +13,7 @@ import './App.css'
 import AppHeader from './components/AppHeader'
 import DecryptScreen from './pages/Decrypt'
 import EncryptScreen from './pages/Encrypt'
+import FilesScreen from './pages/Files'
 
 const DrawerNav = () => (
   <MainNav condensed={false} style={{ height: '85vh' }}>
@@ -53,6 +54,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<EncryptScreen />} />
               <Route path="/decrypt" element={<DecryptScreen />} />
+              <Route path="/files" element={<FilesScreen />} />
             </Routes>
           </ContentLayout>
         </Layout>
